@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Deutsche Bahn - Mobile Connection Data</title>
+    <!--
+       <link th:if="${mode =='development'}" rel="stylesheet" href="../static/bootstrap.css" th:href="@{/bootstrap.css}"/>
+        <link th:if="${mode =='production'}" rel="stylesheet" href="../static/bootstrap.min.css" th:href="@{/bootstrap.min.css}"/>-->
+
+ <link rel="stylesheet" href="../static/bootstrap.css" th:href="@{/bootstrap.css}"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+          integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+          crossorigin=""/>
+    <script type="text/javascript" src="/static/angular.min.js" th:src="@{/angular.min.js}"></script>
+    <script type="text/javascript" src="/static/app/app.module.js" th:src="@{/app/app.module.js}"></script>
+    <script type="text/javascript" src="/static/app/connectionController.js" th:src="@{/app/connectionController.js}"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS33DLoj91lbT6yt4xRgT777iZQJka028&callback=initMap"></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
+            integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+            crossorigin=""></script>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #mapid { height: 180px; }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+</head>
+
+<body ng-app="app" ng-controller="TSVController as vm">
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"> Mobile connections </a>
+            </div>
+            <p class="header-text navbar-right" th:text="'Signed in as '+ ${username}"  style="margin-right: 18px">Signed in as anonymous</p>
+        </div>
+    </nav>
+</header>
+
+
+<div>
+    <div id="mapid"></div>
+    <script>
+        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1Ijoic3hoIiwiYSI6ImNqaDZxMnd5bDA3dTAzM25vcnBlMW5ncnQifQ.vijXWNc6KxkKHDfkNmrpZg'
+        }).addTo(mymap);
+        var marker = L.marker([51.5, -0.09]).addTo(mymap);
+
+        var circle = L.circle([51.508, -0.11], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 500
+        }).addTo(mymap);
+
+        var polygon = L.polygon([
+            [51.509, -0.08],
+            [51.503, -0.06],
+            [51.51, -0.047]
+        ]).addTo(mymap);
+        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+        circle.bindPopup("I am a circle.");
+        polygon.bindPopup("I am a polygon.");
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(mymap);
+        }
+        mymap.on('click', onMapClick);
+
+    </script>
+    <div class="row" >
+        <div class="col-lg-2 col-lg-8">
+            <div class="btn-group" role="group">
+                <button ng-click="vm.getAll()" type="button" class = "btn-dark">All</button>
+
+            </div>
+
+
+                <!--<table class="table">-->
+                <!--<thread>-->
+                    <!--<tr>-->
+                        <!--<th>Test Type</th>-->
+                        <!--<th>Id</th>-->
+                        <!--<th>Time</th>-->
+                        <!--<th>Provider</th>-->
+                        <!--<th>Rat</th>-->
+                        <!--<th>Latitude</th>-->
+                        <!--<th>Longtitude</th>-->
+                        <!--<th>Location Age</th>-->
+                        <!--<th>Accuracy</th>-->
+                        <!--<th>Success</th>-->
+                        <!--<th style="width:90px"></th>-->
+                    <!--</tr>>-->
+                <!--</thread>-->
+                <!--<tbody>-->
+                <!--&lt;!&ndash;<tr >&ndash;&gt;-->
+                    <!--&lt;!&ndash;&lt;!&ndash;ng-repeat="connections in vm.connections"&ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"1"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"2"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"3"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"4"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"5"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"6"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"7"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"8"}}</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>{{"9"}}</td>&ndash;&gt;-->
+                <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                <!--</tbody>-->
+            <!--</table>-->
+        </div>
+    </div>
+</div>
+
+<footer class="footer" style="position:absolute; bottom:0; background-color:#f5f5f5;">
+    <div class="container">
+        <p th:text="${#dates.format(datetime,'dd MM yyyy HH:mm')}" class="text-muted">page was rendered todaay!</p>
+    </div>
+</footer>
+</body>
+</html>
