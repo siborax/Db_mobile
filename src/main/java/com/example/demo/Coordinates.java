@@ -1,11 +1,11 @@
 package com.example.demo;
 
 public class Coordinates {
-    private Double longtitude;
+    private Double longitude;
     private Double latitude;
-    public  Coordinates(Double longtitude,Double latitude){
+    public  Coordinates(Double longitude,Double latitude){
 
-        this.longtitude = longtitude;
+        this.longitude = longitude;
         this.latitude = latitude;
     }
 
@@ -14,6 +14,6 @@ public class Coordinates {
     }
 
     public Double getLongtitude() {
-        return longtitude;
+        return longitude;
     }
 }
