@@ -10,10 +10,6 @@
 
     function connectionController($http){
         var vm= this;
-
-
-
-
         console.log('inside getCoordinatesssss');
         var url = '/connections/coordinates';
         var connectionss = $http.get(url);
