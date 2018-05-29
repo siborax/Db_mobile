@@ -1,15 +1,12 @@
 package com.example.demo;
 
-import com.sun.rowset.internal.Row;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.rowset.RowSetWarning;
 import java.io.File;
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.DoubleAccumulator;
 
 @RestController
 @RequestMapping(value="/connections")
@@ -18,7 +15,8 @@ public class TSVController {
     TsvParser parser = new TsvParser(settings);
     List<MobileConnection> allRows = null;
     ArrayList<Coordinates> Coordinates;
-
+    ArrayList<String> timestampArray;
+    Map<Double,Coordinates> accuracyMap;
 
 
 
@@ -27,23 +25,53 @@ public TSVController(){
     allRows.clear();
     Coordinates = new ArrayList<Coordinates>();
     Coordinates.clear();
+    timestampArray=new ArrayList<String>();
+    timestampArray.clear();
+    accuracyMap=new HashMap<Double, Coordinates>();
 
       List<String[]> RowsInTSV=  parser.parseAll(new File("C:\\Users\\Sibora\\IdeaProjects\\infovisProject\\src\\main\\resources\\ResultOctober-04-11-2016_FOR_OPEN_DATA.tsv"),500);
     if(RowsInTSV.iterator().hasNext()){
         RowsInTSV.remove(0);
 
             for( String[] element : RowsInTSV) {
-                if (new Double(element[8]) > 100000) {
-                    System.out.println("element8:"+ new Double (element[8]));
-                    allRows.add(new MobileConnection(element[0], element[1], element[2], element[3], element[4], new Double(element[5]), new Double(element[6]), new Double(element[7]), new Double(element[8]), new Boolean(element[9])));
-                    //Coordinates.put(new Coordinates(new Double(element[5]), (new Double(element[6]))));
-                    Coordinates.add(new Coordinates(new Double(element[5]), (new Double(element[6]))));
+               // if (new Double(element[8]) > 100000) {
+                  //  System.out.println("element8:"+ new Double (element[8]));
+                    //allRows.add(new MobileConnection(element[0], element[1], element[2], element[3], element[4], new Double(element[5]), new Double(element[6]), new Double(element[7]), new Double(element[8]), new Boolean(element[9])));
+
+
+                   Coordinates.add(new Coordinates(new Double(element[5]), (new Double(element[6]))));
+                    Coordinates cord= new Coordinates(new Double(element[5]), (new Double(element[6])));
+                    accuracyMap.put(new Double(element[8]),cord);
+                //    }
+                //System.out.println("element2: "+ element[2]);
+                String date = element[2];
+                int spacePos = date.lastIndexOf(" ");
+                if(spacePos>0){
+
+                    String timestamp = date.substring(0,spacePos-1);
+               //     System.out.println("dt:"+ timestamp);
+                  //  Date ts= new Date(timestamp);
+                    timestampArray.add(timestamp);
                 }
+
+
             }
         }
-    System.out.println("size:"+ Coordinates.size());
+    //System.out.println("size:"+ timestampArray.size());
 
 }
+    @RequestMapping(value="/getAccuracy", method = RequestMethod.GET)
+public Map getAccuracy(){
+    return accuracyMap;
+}
+
+
+@RequestMapping(value="/timestamps", method = RequestMethod.GET)
+public ArrayList<String> gettimestamps(){
+    return timestampArray;
+}
+
+
     @RequestMapping(value= "/all", method= RequestMethod.GET)
    // @ResponseBody
     public List<MobileConnection> getAllRows() {

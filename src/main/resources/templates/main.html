@@ -1,406 +1,520 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Deutsche Bahn - Mobile Connection Data</title>
-    <!--
-       <link th:if="${mode =='development'}" rel="stylesheet" href="../static/bootstrap.css" th:href="@{/bootstrap.css}"/>
-        <link th:if="${mode =='production'}" rel="stylesheet" href="../static/bootstrap.min.css" th:href="@{/bootstrap.min.css}"/>-->
-
- <link rel="stylesheet" href="../static/bootstrap.css" th:href="@{/bootstrap.css}"/>
+    <title>DB-Mobile Connection Data</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/bootstrap.css" th:href="@{/bootstrap.css}"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
           integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
           crossorigin=""/>
     <link rel="stylesheet" href="../static/dropdownStyle.css" th:href="@{../dropdownStyle.css}">
 
 
-    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <script type="text/javascript" src="/static/angular.min.js" th:src="@{/angular.min.js}"></script>
     <script type="text/javascript" src="/static/app/app.module.js" th:src="@{/app/app.module.js}"></script>
     <script type="text/javascript" src="/static/app/connectionController.js" th:src="@{/app/connectionController.js}"></script>
-    <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript" src="/static/functions.js" th:src="@{/functions.js}"></script>
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
             integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
             crossorigin=""></script>
     <script type="text/javascript" src="/static/dropdown.js" th:src="@{/dropdown.js}"></script>
-
-
-
-<!--<header>-->
-    <!--<nav class="navbar navbar-default">-->
-        <!--<div class="container-fluid">-->
-            <!--<div class="navbar-header">-->
-                <!--<a class="navbar-brand" href="#"> Mobile connections </a>-->
-            <!--</div>-->
-            <!--<p class="header-text navbar-right" th:text="'Signed in as '+ ${username}"  style="margin-right: 18px">Signed in as anonymous</p>-->
-        <!--</div>-->
-    <!--</nav>-->
-<!--</header>-->
-<link rel="stylesheet" href="d3.slider.css" />
-
-<style>
-
-    path {
-        fill: none;
-        stroke: #333;
-        stroke-width: .5px;
-    }
-    p{
-        font-size: 10pt;
-        margin-left:20px;
-    }
-    .land-boundary {
-        stroke-width: 1px;
-    }
-
-    .county-boundary {
-        stroke: #ddd;
-    }
-
-    .site {
-        stroke-width: .5px;
-        stroke: #333;
-        fill: #9cf;
-    }
-    .filter_options{
-        position:absolute;
-        left: 150px;
-        top: 740px;
-        padding: 80px 50px 0px 0px;
-        margin:10px 60px 0px 0px;
-        width:120px;
-        border:dot-dash;
-        border:#005cbf;
-    }
-    /*filter_button{*/
-        /**/
-    /*}*/
-
-    #slider3 {
-        margin: 20px 0 10px 20px;
-        width: 900px;
-    }
-    .subunit {
-        posiiton:absolute;
-        top:450px;
-        fill: #ddc; }
-
-    .place-label {
-        fill: #black;
-        fill-opacity: 1;
-        font-size: 10px;
-        font-weight: 300;
-        text-anchor: left;
-    }
-    .connecion {
-        fill: steelblue;
-    }
-    /*style per timeline*/
-    path {
-        fill: none;
-        stroke: #333;
-        stroke-width: .5px;
-    }
-
-    .land-boundary {
-        stroke-width: 1px;
-    }
-
-    .county-boundary {
-        stroke: #ddd;
-    }
-
-    .site {
-        stroke-width: .5px;
-        stroke: #333;
-        fill: #9cf;
-    }
-
-    #slider3 {
-        position:absolute;
-        top:450px;
-        margin: 20px 0 10px 20px;
-        width: 900px;
-    }
-</style>
-
-   <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/topojson.v0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script src="d3.slider.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="../static/d3.slider.js" th:src="@{/d3.slider.js}"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+        .row.content {height: 1500px}
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height: auto;}
+        }
+        path {
+            fill: none;
+            stroke: #333;
+            stroke-width: .5px;
+        }
+        p{
+            font-size: 10pt;
+            margin-left:20px;
+        }
+        .land-boundary {
+            stroke-width: 1px;
+        }
+
+        .county-boundary {
+            stroke: #ddd;
+        }
+
+        .site {
+            stroke-width: .5px;
+            stroke: #333;
+            fill: #9cf;
+        }
+        .filter_options{
+            position:absolute;
+            left: 150px;
+            top: 740px;
+            padding: 80px 50px 0px 0px;
+            margin:10px 60px 0px 0px;
+            width:120px;
+            border:dot-dash;
+            border:#005cbf;
+        }
+
+        .subunit {
+            posiiton:relativ;
+            top:0px;
+            fill: #ddc; }
+
+        .place-label {
+            fill: #black;
+            fill-opacity: 1;
+            font-size: 10px;
+            font-weight: 300;
+            text-anchor: left;
+        }
+        .connecion {
+            fill: steelblue;
+        }
+        /*style per timeline*/
+        path {
+            fill: none;
+            stroke: #333;
+            stroke-width: .5px;
+        }
+
+        .land-boundary {
+            stroke-width: 1px;
+        }
+
+        .county-boundary {
+            stroke: #ddd;
+        }
+
+        .site {
+            stroke-width: .5px;
+            stroke: #333;
+            fill: #9cf;
+        }
+
+        #slider3 {
+            position:relative;
+            top:10px;
+            margin: 20px 0 10px 20px;
+            width: 500px;
+        }
+        #sliderContainer {
+            width:100%;
+            text-align: center;
+            position: relative;
+            top: 5px;
+            color:black;
+        }
+    </style>
+
+
 </head>
-
-
 <body ng-app="app" ng-controller="connectionController as vm">
 
-<div id="slider3">slider</div>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-3 sidenav">
+            <hr><br>
+            <h3><small>Choose an internet service provider...</small></h3>
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#section1">Vodafone</a></li>
+                <li><a href="#section2">DTAG</a></li>
+                <li><a href="#section3">E-Plus</a></li>
+                <li><a href="#section3">02</a></li>
+            </ul><br>
+            <hr/>
+            <h3><small>Transfer rate: </small></h3>
+            <div class="dropdown">
+                <button class="btn btn-default " type="button" id="menu2" data-toggle="dropdown">4G
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="menu2">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3G</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2G</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1G</a></li>
 
-<div class="filter_options"> Choose providers
-    <input class="filter_button" id="vodafone" type="checkbox">Vodafone</input><br>
-    <input class="filter_button" id="o2" type="checkbox">O2</input><br>
-    <input class="filter_button" id="dtag" type="checkbox">DTAG</input><br>
-    <input class="filter_button" id="e-plus" type="checkbox">E-PLUS</input><br>
-</div>
+                </ul>
+            </div>
 
-<select id="inds">
-    <option value="4G" selected="selected">4G</option>
-    <option value="3G">3G</option>
-    <option value="2G">2G</option>
-    <option value="1G">1G</option>
-</select>
-<div id="legendContainer" class="legendContainer">
-    <svg id="legend"></svg>
-</div>
-<div id="showAll">
-    <input name="showAllButton"
-           type="button"
-           value="Show All"
-           onclick="showAll()" />
-</div>
+            <br>
+            <br>
 
-<div id="clearAll">
-    <input name="clearAllButton"
-           type="button"
-           value="Clear All"
-           onclick="clearAll()" />
-</div>
-<!--//dropdown.js -->
-<script>
+            <h3><small>Choose the signal quality: </small></h3>
+            <br>
 
-    var init_year = 1990;
-    function filterJSON(json, key, value) {
-        var result = [];
-        json.forEach(function(val,idx,arr){
-            if(val[key] == value){
+            <div id="sliderContainer" th bgcolor= "#ADD8E6">
 
-                result.push(val)
-            }
-        })
-        return result;
-    }
+                <!--<input id="timeslide" type="range" min="0" max="10" value="0" step="1"/><br>-->
+                <!--<span id="range">January</span>-->
 
-    // Set the dimensions of the canvas / graph
-    var margin = {top: 50, right: 20, bottom: 30, left: 160},
-        width = 1000 - margin.left - margin.right,
-        height = 550 - margin.top - margin.bottom;
-
-    // Parse the date / time
-
-    // Set the ranges
-    var x = d3.time.scale().range([0, width]);
-    var y = d3.scale.linear().range([height, 0]);
-
-    // Define the axes
-    var xAxis = d3.svg.axis().scale(x)
-        .orient("bottom").ticks(5)
-        .tickFormat(d3.time.format("%Y"))
-
-    var yAxis = d3.svg.axis().scale(y)
-        .orient("left").ticks(5);
-
-    // Define the line
-    var stateline = d3.svg.line()
-        .interpolate("cardinal")
-        .x(function(d) { return x(d.year); })
-        .y(function(d) { return y(d.value); });
-
-    // Adds the svg canvas
-    var svg = d3.select("body")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-    var data;
-    // Get the data
-    d3.json("data.json", function(error, json) {
-        console.log(json)
-
-        json.forEach(function(d) {
-            d.value = +d.value;
-        });
-
-        d3.select('#inds')
-            .on("change", function () {
-                var sect = document.getElementById("inds");
-                var section = sect.options[sect.selectedIndex].value;
-
-                data = filterJSON(json, 'produce', section);
+            </div><br>
+            <hr/>
+            <hr>
 
 
-                //debugger
+            <h3><small>Find the best service provider for your journey</small></h3>
+            <div>
+                <div class="col-xs-4 text-left">
+                    <div class="dropdown">
+                        <button class="btn btn-default " type="button" id="menu3" data-toggle="dropdown">From...
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Bonn</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Münster</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Düsseldorf</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ulm</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mannheim</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Freiburg</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Giessen</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 text-right">
+                <div class="dropdown">
+                    <button class="btn btn-default" type="button" id="menu4" data-toggle="dropdown">To...
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Bonn</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Münster</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Düsseldorf</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ulm</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Mannheim</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Freiburg</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Giessen</a></li>
 
-                data.forEach(function(d) {
-                    d.value = +d.value;
-                    //d.year = parseDate(String(d.year));
-                    d.active = true;
-                });
+                    </ul>
 
-
-                //debugger
-                updateGraph(data);
-
-
-                jQuery('h1.page-header').html(section);
-            });
-
-        // generate initial graph
-        data = filterJSON(json, 'produce', 'apples');
-        updateGraph(data);
-
-    });
-var len= 100;
-    var color = d3.scale.ordinal().range(["#008000", "#ff0000"]);
-    // var color = d3.scale.linear().domain([1,length])
-    //     .interpolate(d3.interpolateHcl).range(["#48A36D",  "#0096ff", "#ff007e"]);
-
-    function updateGraph(data) {
-
-
-        // Scale the range of the data
-        x.domain(d3.extent(data, function(d) { return d.year; }));
-        y.domain([d3.min(data, function(d) { return d.value; }), d3.max(data, function(d) { return d.value; })]);
-
-
-        // Nest the entries by state
-        dataNest = d3.nest()
-            .key(function(d) {return d.state;})
-            .entries(data);
+                </div>
+            </div>
+        </div>
 
 
-        var result = dataNest.filter(function(val,idx, arr){
-            return $("." + val.key).attr("fill") != "#ccc"
-            // matching the data with selector status
-        });
+
+        <div class="col-sm-9">
 
 
-        var state = svg.selectAll(".line")
-            .data(result, function(d){return d.key});
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div id="column1-1">
+                            1 of 2
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div id="column1-2">
+                            2 of 2
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div id="column2-1">
+                            1 of 3</div></div>
+                    <div class="col">
+                        <div id="column2-2">
+                            2 of 3</div>
+                    </div>
+                    <div class="col">
+                        3 of 3
+                    </div>
+                </div>
+            </div>
 
-        state.enter().append("path")
-            .attr("class", "line");
 
-        state.transition()
-            .style("stroke", function(d,i) { return d.color = color.d; })
-            .attr("id", function(d){ return 'tag'+d.key.replace(/\s+/g, '');}) // assign ID
-            .attr("d", function(d){
 
-                return stateline(d.values)
-            });
+            <div id="slider3">slider</div>
 
-        state.exit().remove();
+            <br><br>
+            <hr/>
+            <h4><small>RECENT POSTS</small></h4>
+            <hr>
+            <div id="legendContainer" class="legendContainer">
+                <svg id="legend"></svg>
+                <script>
+                    var init_year = 2015;
+                    function filterJSON(json, key, value) {
+                        var result = [];
+                        json.forEach(function(val,idx,arr){
+                            if(val[key] == value){
 
-        var legend = d3.select("#legend")
-            .selectAll("text")
-            .data(dataNest, function(d){return d.key});
-
-        //checkboxes
-        legend.enter().append("rect")
-            .attr("width", 10)
-            .attr("height", 10)
-            .attr("x", 0)
-            .attr("y", function (d, i) { return 0 +i*15; })  // spacing
-            .attr("fill",function(d) {
-                return color(d.key);
-
-            })
-            .attr("class", function(d,i){return "legendcheckbox " + d.key})
-            .on("click", function(d){
-                d.active = !d.active;
-
-                d3.select(this).attr("fill", function(d){
-                    if(d3.select(this).attr("fill")  == "#ccc"){
-                        return color(d.key);
-                    }else {
-                        return "#ccc";
+                                result.push(val)
+                            }
+                        })
+                        return result;
                     }
-                })
+
+                    // Set the dimensions of the canvas / graph
+                    var margin = {top: 50, right: 20, bottom: 30, left: 160},
+                        width = 500 - margin.left - margin.right,
+                        height = 240 - margin.top - margin.bottom;
+
+                    // Parse the date / time
+
+                    // Set the ranges
+                    var x = d3.time.scale().range([0, width]);
+                    var y = d3.scale.linear().range([height, 0]);
+
+                    // Define the axes
+                    var xAxis = d3.svg.axis().scale(x)
+                        .orient("bottom").ticks(5)
+                        .tickFormat(d3.time.format("%Y"))
+
+                    var yAxis = d3.svg.axis().scale(y)
+                        .orient("left").ticks(5);
+
+                    // Define the line
+                    var stateline = d3.svg.line()
+                        .interpolate("cardinal")
+                        .x(function(d) { return x(d.year); })
+                        .y(function(d) { return y(d.value); });
+
+                    // Adds the svg canvas
+                    var svg = d3.select("#column1-1")
+                        .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                            "translate(" + margin.left + "," + margin.top + ")");
+                    var data;
+                    // Get the data
+                    d3.json("data.json", function(error, json) {
+                        console.log(json)
+
+                        json.forEach(function(d) {
+                            d.value = +d.value;
+                        });
+
+                        d3.select('#inds')
+                            .on("change", function () {
+                                var sect = document.getElementById("inds");
+                                var section = sect.options[sect.selectedIndex].value;
+
+                                data = filterJSON(json, 'produce', section);
 
 
-                var result = dataNest.filter(function(val,idx, arr){
-                    return $("." + val.key).attr("fill") != "#ccc"
-                    // matching the data with selector status
-                })
+                                //debugger
 
-                // Hide or show the lines based on the ID
-                svg.selectAll(".line").data(result, function(d){return d.key})
-                    .enter()
-                    .append("path")
-                    .attr("class", "line")
-                    .style("stroke", function(d,i) { return d.color = color(d.key); })
-                    .attr("d", function(d){
-                        return stateline(d.values);
+                                data.forEach(function(d) {
+                                    d.value = +d.value;
+                                    //d.year = parseDate(String(d.year));
+                                    d.active = true;
+                                });
+
+
+                                //debugger
+                                updateGraph(data);
+
+
+                                jQuery('h1.page-header').html(section);
+                            });
+
+                        // generate initial graph
+                        data = filterJSON(json, 'produce', 'apples');
+                        updateGraph(data);
+
                     });
+                    var len= 100;
+                    var color = d3.scale.ordinal().range(["#008000", "#ff0000"]);
+                    // var color = d3.scale.linear().domain([1,length])
+                    //     .interpolate(d3.interpolateHcl).range(["#48A36D",  "#0096ff", "#ff007e"]);
 
-                svg.selectAll(".line").data(result, function(d){return d.key}).exit().remove()
-
-            })
-
-      //  Add the Legend text
-        legend.enter().append("text")
-            .attr("x", 15)
-            .attr("y", function(d,i){return 10 +i*15;})
-            .attr("class", "legend");
-
-        legend.transition()
-            .style("fill", "#777" )
-            .text(function(d){return d.key;});
-
-        legend.exit().remove();
-
-        svg.selectAll(".axis").remove();
-
-        // Add the X Axis
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        // Add the Y Axis
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
-    };
-
-    function clearAll(){
-        d3.selectAll(".line")
-            .transition().duration(100)
-            .attr("d", function(d){
-                return null;
-            });
-        d3.select("#legend").selectAll("rect")
-            .transition().duration(100)
-            .attr("fill", "#ccc");
-    };
-
-    function showAll(){
-        d3.selectAll(".line")
-            .transition().duration(100)
-            .attr("d", function(d){
-                return stateline(d.values);
-            });
-        d3.select("#legend").selectAll("rect")
-            .attr("fill",function(d) {
-                if (d.active == true){
-                    return color(d.key);
-                }
-            })
-    };
+                    function updateGraph(data) {
 
 
-</script>
+                        // Scale the range of the data
+                        x.domain(d3.extent(data, function(d) { return d.year; }));
+                        y.domain([d3.min(data, function(d) { return d.value; }), d3.max(data, function(d) { return d.value; })]);
+
+
+                        // Nest the entries by state
+                        dataNest = d3.nest()
+                            .key(function(d) {return d.state;})
+                            .entries(data);
+
+
+                        var result = dataNest.filter(function(val,idx, arr){
+                            return $("." + val.key).attr("fill") != "#ccc"
+                            // matching the data with selector status
+                        });
+
+
+                        var state = svg.selectAll(".line")
+                            .data(result, function(d){return d.key});
+
+                        state.enter().append("path")
+                            .attr("class", "line");
+
+                        state.transition()
+                            .style("stroke", function(d,i) { return d.color = color.d; })
+                            .attr("id", function(d){ return 'tag'+d.key.replace(/\s+/g, '');}) // assign ID
+                            .attr("d", function(d){
+
+                                return stateline(d.values)
+                            });
+
+                        state.exit().remove();
+
+                        var legend = d3.select("#legend")
+                            .selectAll("text")
+                            .data(dataNest, function(d){return d.key});
+
+                        //checkboxes
+                        legend.enter().append("rect")
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .attr("x", 0)
+                            .attr("y", function (d, i) { return 0 +i*15; })  // spacing
+                            .attr("fill",function(d) {
+                                return color(d.key);
+
+                            })
+                            .attr("class", function(d,i){return "legendcheckbox " + d.key})
+                            .on("click", function(d){
+                                d.active = !d.active;
+
+                                d3.select(this).attr("fill", function(d){
+                                    if(d3.select(this).attr("fill")  == "#ccc"){
+                                        return color(d.key);
+                                    }else {
+                                        return "#ccc";
+                                    }
+                                })
+
+
+                                var result = dataNest.filter(function(val,idx, arr){
+                                    return $("." + val.key).attr("fill") != "#ccc"
+                                    // matching the data with selector status
+                                })
+
+                                // Hide or show the lines based on the ID
+                                svg.selectAll(".line").data(result, function(d){return d.key})
+                                    .enter()
+                                    .append("path")
+                                    .attr("class", "line")
+                                    .style("stroke", function(d,i) { return d.color = color(d.key); })
+                                    .attr("d", function(d){
+                                        return stateline(d.values);
+                                    });
+
+                                svg.selectAll(".line").data(result, function(d){return d.key}).exit().remove()
+
+                            })
+
+                        //  Add the Legend text
+                        legend.enter().append("text")
+                            .attr("x", 15)
+                            .attr("y", function(d,i){return 10 +i*15;})
+                            .attr("class", "legend");
+
+                        legend.transition()
+                            .style("fill", "#777" )
+                            .text(function(d){return d.key;});
+
+                        legend.exit().remove();
+
+                        svg.selectAll(".axis").remove();
+
+                        // Add the X Axis
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis);
+
+                        // Add the Y Axis
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .call(yAxis);
+                    };
+
+                    function clearAll(){
+                        d3.selectAll(".line")
+                            .transition().duration(100)
+                            .attr("d", function(d){
+                                return null;
+                            });
+                        d3.select("#legend").selectAll("rect")
+                            .transition().duration(100)
+                            .attr("fill", "#ccc");
+                    };
+
+                    function showAll(){
+                        d3.selectAll(".line")
+                            .transition().duration(100)
+                            .attr("d", function(d){
+                                return stateline(d.values);
+                            });
+                        d3.select("#legend").selectAll("rect")
+                            .attr("fill",function(d) {
+                                if (d.active == true){
+                                    return color(d.key);
+                                }
+                            })
+                    };
+
+
+                </script>
+            </div>
+
+            <div id="showAll">
+                <input name="showAllButton"
+                       type="button"
+                       value="Show All"
+                       onclick="showAll()" />
+            </div>
+
+            <div id="clearAll">
+                <input name="clearAllButton"
+                       type="button"
+                       value="Clear All"
+                       onclick="clearAll()" />
+            </div>
+
+            <br>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<footer class="container-fluid">
+    <p>Footer Text</p>
+</footer>
+
 </body>
-
-<!--<footer class="footer" style="position:absolute; bottom:0; background-color:#f5f5f5;">-->
-    <!--<div class="container">-->
-        <!--<p th:text="${#dates.format(datetime,'dd MM yyyy HH:mm')}" class="text-muted">page was rendered todaay!</p>-->
-    <!--</div>-->
-<!--</footer>-->
-
 </html>
