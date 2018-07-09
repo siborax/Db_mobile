@@ -54,7 +54,7 @@ public class TSVController {
 
             for( String[] element : RowsInTSV) {
 
-//                if (new Double(element[8]) > 100000) {
+                if (new Double(element[8]) > 100) {
 //                    System.out.println("element8:"+ new Double (element[8]));
                     allRows.add(new MobileConnection(element[0], element[1], element[2], element[3], element[4], new Double(element[5]), new Double(element[6]), new Double(element[7]), new Double(element[8]), new Boolean(element[9])));
                     Coordinates.add(new Coordinates(new Double(element[5]), (new Double(element[6]))));
@@ -76,7 +76,7 @@ public class TSVController {
 //                    System.out.println("rate "+element[4]);
 
                     data.add(new Data(new Double(element[8]),dateNumeric,element[4],new Coordinates(new Double(element[5]), (new Double(element[6]))),element[3], new Boolean(element[9])));
-               // }
+                }
             }
         }
 
@@ -105,7 +105,7 @@ public class TSVController {
                             logger.debug("inside if");
                             int count = averagedAccuraciesPerDate.containsKey(existingElement) ? averagedAccuraciesPerDate.get(existingElement) : 0;
                             averagedAccuraciesPerDate.put(existingElement, count + 1);
-                            System.out.println("count" +aggregatedMonths.get(0).getAccuracy());
+                          //System.out.println("count" +aggregatedMonths.get(0).getAccuracy());
                             aggregatedMonths.add(new Data((iterator.getAccuracy() + existingElement.getAccuracy())/averagedAccuraciesPerDate.get(existingElement)+1, existingElement.getDate(), existingElement.getProvider(), existingElement.getSuccess()));
 
                         }
@@ -114,7 +114,7 @@ public class TSVController {
                 }
 
             }
-            System.out.println("sz:" + averagedAccuraciesPerDate.size());
+         //   System.out.println("sz:" + averagedAccuraciesPerDate.size());
         }
 //        for(Data d:aggregatedMonths){
 
@@ -122,8 +122,8 @@ public class TSVController {
             for(int dt=0;dt<aggregatedMonths.size();dt++){
                     if(d.getProvider().equals(aggregatedMonths.get(dt).getProvider())){
                         if(d.getDate().equals(aggregatedMonths.get(dt).getDate()))
-                        System.out.println(d.getProvider());
-                        System.out.println(aggregatedMonths.get(dt).getAccuracy());
+                     //   System.out.println(d.getProvider());
+                       // System.out.println(aggregatedMonths.get(dt).getAccuracy());
 //                int acc = Integer.parseInt(aggregatedMonths.get(dt).getAccuracy())/averagedAccuraciesPerDate.get(d);
                         System.out.println("acc:");
                       //  aggregatedMonths.get(dt).setAccuracy(String.valueOf(acc));
@@ -140,7 +140,7 @@ public class TSVController {
     @RequestMapping(value= "/getData", method= RequestMethod.GET)
     // @ResponseBody
     public List<Data> getData() {
-        System.out.println("not aggregated:"+ data.size());
+//        System.out.println("not aggregated:"+ data.size());
         return data;
     }
     @RequestMapping(value= "/coordinates", method= RequestMethod.GET)
@@ -156,7 +156,7 @@ public class TSVController {
     @RequestMapping(value= "/aggregatedByDate", method= RequestMethod.GET)
     // @ResponseBody
     public List<Data> getAggregatedMonths() {
-        System.out.println("aggregated:"+ aggregatedMonths.size());
+//        System.out.println("aggregated:"+ aggregatedMonths.size());
         return aggregatedMonths;
     }
 
