@@ -12,14 +12,17 @@
           integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
           crossorigin=""/>
     <link rel="stylesheet" href="../static/dropdownStyle.css" th:href="@{../dropdownStyle.css}">
-
+    <link rel="stylesheet" href="../static/stylesBrush.css" th:href="@{../stylesBrush.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/mystyle.css" th:href="@{../mystyle.css}">
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <script type="text/javascript" src="/static/angular.min.js" th:src="@{/angular.min.js}"></script>
     <script type="text/javascript" src="/static/app/app.module.js" th:src="@{/app/app.module.js}"></script>
     <script type="text/javascript" src="/static/app/connectionController.js" th:src="@{/app/connectionController.js}"></script>
-    <script type="text/javascript" src="/static/functions.js" th:src="@{/functions.js}"></script>
+    <!--<script type="text/javascript" src="/static/functions.js" th:src="@{/functions.js}"></script>-->
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
             integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
@@ -31,115 +34,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script type="text/javascript" src="../static/d3.slider.js" th:src="@{/d3.slider.js}"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <style>
-        /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-        .row.content {height: 1500px}
 
-        /* Set gray background color and 100% height */
-        .sidenav {
-            background-color: #f1f1f1;
-            height: 100%;
-        }
+    <!--<script type="text/javascript" src="/static/app/scatterBrushFilter.js" th:src="@{/app/scatterBrushFilter.js}"></script>-->
 
-        /* Set black background color, white text and some padding */
-        footer {
-            background-color: #555;
-            color: white;
-            padding: 15px;
-        }
-
-        /* On small screens, set height to 'auto' for sidenav and grid */
-        @media screen and (max-width: 767px) {
-            .sidenav {
-                height: auto;
-                padding: 15px;
-            }
-            .row.content {height: auto;}
-        }
-        path {
-            fill: none;
-            stroke: #333;
-            stroke-width: .5px;
-        }
-        p{
-            font-size: 10pt;
-            margin-left:20px;
-        }
-        .land-boundary {
-            stroke-width: 1px;
-        }
-
-        .county-boundary {
-            stroke: #ddd;
-        }
-
-        .site {
-            stroke-width: .5px;
-            stroke: #333;
-            fill: #9cf;
-        }
-        .filter_options{
-            position:absolute;
-            left: 150px;
-            top: 740px;
-            padding: 80px 50px 0px 0px;
-            margin:10px 60px 0px 0px;
-            width:120px;
-            border:dot-dash;
-            border:#005cbf;
-        }
-
-        .subunit {
-            posiiton:relativ;
-            top:0px;
-            fill: #ddc; }
-
-        .place-label {
-            fill: #black;
-            fill-opacity: 1;
-            font-size: 10px;
-            font-weight: 300;
-            text-anchor: left;
-        }
-        .connecion {
-            fill: steelblue;
-        }
-        /*style per timeline*/
-        path {
-            fill: none;
-            stroke: #333;
-            stroke-width: .5px;
-        }
-
-        .land-boundary {
-            stroke-width: 1px;
-        }
-
-        .county-boundary {
-            stroke: #ddd;
-        }
-
-        .site {
-            stroke-width: .5px;
-            stroke: #333;
-            fill: #9cf;
-        }
-
-        #slider3 {
-            position:relative;
-            top:10px;
-            margin: 20px 0 10px 20px;
-            width: 500px;
-        }
-        #sliderContainer {
-            width:100%;
-            text-align: center;
-            position: relative;
-            top: 5px;
-            color:black;
-        }
-    </style>
 
 
 </head>
@@ -177,8 +76,8 @@
 
             <div id="sliderContainer" th bgcolor= "#ADD8E6">
 
-                <!--<input id="timeslide" type="range" min="0" max="10" value="0" step="1"/><br>-->
-                <!--<span id="range">January</span>-->
+                <input id="timeslide" type="range" min="0" max="10" value="0" step="1"/><br>
+                <span id="range">40.05</span>
 
             </div><br>
             <hr/>
@@ -226,13 +125,150 @@
 
         <div class="col-sm-9">
 
-
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <div id="column1-1">
-                            1 of 2
-                        </div>
+                        <div id="column1">
+                            <svg width="960" height="500"></svg>
+                            <script>
+                                // alert("dddfdf");
+                                var svg = d3.select("svg"),
+                                    margin = {top: 20, right: 20, bottom: 110, left: 40},
+                                    margin2 = {top: 430, right: 20, bottom: 30, left: 40},
+                                    width = +svg.attr("width") - margin.left - margin.right,
+                                    height = +svg.attr("height") - margin.top - margin.bottom,
+                                    height2 = +svg.attr("height") - margin2.top - margin2.bottom;
+
+                                var parseDate = d3.timeParse("%m/%d/%Y %H:%M");
+
+                                var x = d3.scaleTime().range([0, width]),
+                                    x2 = d3.scaleTime().range([0, width]),
+                                    y = d3.scaleLinear().range([height, 0]),
+                                    y2 = d3.scaleLinear().range([height2, 0]);
+
+                                var xAxis = d3.axisBottom(x),
+                                    xAxis2 = d3.axisBottom(x2),
+                                    yAxis = d3.axisLeft(y);
+
+                                var brush = d3.brushX()
+                                    .extent([[0, 0], [width, height2]])
+                                    .on("brush end", brushed);
+
+                                var zoom = d3.zoom()
+                                    .scaleExtent([1, Infinity])
+                                    .translateExtent([[0, 0], [width, height]])
+                                    .extent([[0, 0], [width, height]])
+                                    .on("zoom", zoomed);
+
+                                var line = d3.line()
+                                    .x(function (d) { return x(d.Date); })
+                                    .y(function (d) { return y(d.Air_Temp); });
+
+                                var line2 = d3.line()
+                                    .x(function (d) { return x2(d.Date); })
+                                    .y(function (d) { return y2(d.Air_Temp); });
+
+                                var clip = svg.append("defs").append("svg:clipPath")
+                                    .attr("id", "clip")
+                                    .append("svg:rect")
+                                    .attr("width", width)
+                                    .attr("height", height)
+                                    .attr("x", 0)
+                                    .attr("y", 0);
+
+
+                                var Line_chart = svg.append("g")
+                                    .attr("class", "focus")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                                    .attr("clip-path", "url(#clip)");
+
+
+                                var focus = svg.append("g")
+                                    .attr("class", "focus")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                                var context = svg.append("g")
+                                    .attr("class", "context")
+                                    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+                                d3.csv("example.csv", type, function (error, data) {
+                                    if (error) throw error;
+
+                                    x.domain(d3.extent(data, function(d) { return d.Date; }));
+                                    y.domain([0, d3.max(data, function (d) { return d.Air_Temp; })]);
+                                    x2.domain(x.domain());
+                                    y2.domain(y.domain());
+
+
+                                    focus.append("g")
+                                        .attr("class", "axis axis--x")
+                                        .attr("transform", "translate(0," + height + ")")
+                                        .call(xAxis);
+
+                                    focus.append("g")
+                                        .attr("class", "axis axis--y")
+                                        .call(yAxis);
+
+                                    Line_chart.append("path")
+                                        .datum(data)
+                                        .attr("class", "line")
+                                        .attr("d", line);
+
+                                    context.append("path")
+                                        .datum(data)
+                                        .attr("class", "line")
+                                        .attr("d", line2);
+
+
+                                    context.append("g")
+                                        .attr("class", "axis axis--x")
+                                        .attr("transform", "translate(0," + height2 + ")")
+                                        .call(xAxis2);
+
+                                    context.append("g")
+                                        .attr("class", "brush")
+                                        .call(brush)
+                                        .call(brush.move, x.range());
+
+                                    svg.append("rect")
+                                        .attr("class", "zoom")
+                                        .attr("width", width)
+                                        .attr("height", height)
+                                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                                        .call(zoom);
+
+
+                                    console.log(data);
+                                });
+
+                                function brushed() {
+                                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+                                    var s = d3.event.selection || x2.range();
+                                    x.domain(s.map(x2.invert, x2));
+                                    Line_chart.select(".line").attr("d", line);
+                                    focus.select(".axis--x").call(xAxis);
+                                    svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+                                        .scale(width / (s[1] - s[0]))
+                                        .translate(-s[0], 0));
+                                }
+
+                                function zoomed() {
+                                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+                                    var t = d3.event.transform;
+                                    x.domain(t.rescaleX(x2).domain());
+                                    Line_chart.select(".line").attr("d", line);
+                                    focus.select(".axis--x").call(xAxis);
+                                    context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+                                }
+
+                                function type(d) {
+                                    d.Date = parseDate(d.Date);
+                                    d.Air_Temp = +d.Air_Temp;
+                                    return d;
+                                }
+
+                            </script>
+
                     </div>
                     <div class="col">
                         <div id="column1-2">
@@ -255,240 +291,240 @@
             </div>
 
 
-
+<div id="example"></div>
             <div id="slider3">slider</div>
 
             <br><br>
             <hr/>
             <h4><small>RECENT POSTS</small></h4>
             <hr>
-            <div id="legendContainer" class="legendContainer">
-                <svg id="legend"></svg>
-                <script>
-                    var init_year = 2015;
-                    function filterJSON(json, key, value) {
-                        var result = [];
-                        json.forEach(function(val,idx,arr){
-                            if(val[key] == value){
+            <!--<div id="legendContainer" class="legendContainer">-->
+                <!--<svg id="legend"></svg>-->
+                <!--<script>-->
+                    <!--var init_year = 2015;-->
+                    <!--function filterJSON(json, key, value) {-->
+                        <!--var result = [];-->
+                        <!--json.forEach(function(val,idx,arr){-->
+                            <!--if(val[key] == value){-->
 
-                                result.push(val)
-                            }
-                        })
-                        return result;
-                    }
+                                <!--result.push(val)-->
+                            <!--}-->
+                        <!--})-->
+                        <!--return result;-->
+                    <!--}-->
 
-                    // Set the dimensions of the canvas / graph
-                    var margin = {top: 50, right: 20, bottom: 30, left: 160},
-                        width = 500 - margin.left - margin.right,
-                        height = 240 - margin.top - margin.bottom;
+                    <!--// Set the dimensions of the canvas / graph-->
+                    <!--var margin = {top: 50, right: 20, bottom: 30, left: 160},-->
+                        <!--width = 500 - margin.left - margin.right,-->
+                        <!--height = 240 - margin.top - margin.bottom;-->
 
-                    // Parse the date / time
+                    <!--// Parse the date / time-->
 
-                    // Set the ranges
-                    var x = d3.time.scale().range([0, width]);
-                    var y = d3.scale.linear().range([height, 0]);
+                    <!--// Set the ranges-->
+                    <!--var x = d3.time.scale().range([0, width]);-->
+                    <!--var y = d3.scale.linear().range([height, 0]);-->
 
-                    // Define the axes
-                    var xAxis = d3.svg.axis().scale(x)
-                        .orient("bottom").ticks(5)
-                        .tickFormat(d3.time.format("%Y"))
+                    <!--// Define the axes-->
+                    <!--var xAxis = d3.svg.axis().scale(x)-->
+                        <!--.orient("bottom").ticks(5)-->
+                        <!--.tickFormat(d3.time.format("%Y"))-->
 
-                    var yAxis = d3.svg.axis().scale(y)
-                        .orient("left").ticks(5);
+                    <!--var yAxis = d3.svg.axis().scale(y)-->
+                        <!--.orient("left").ticks(5);-->
 
-                    // Define the line
-                    var stateline = d3.svg.line()
-                        .interpolate("cardinal")
-                        .x(function(d) { return x(d.year); })
-                        .y(function(d) { return y(d.value); });
+                    <!--// Define the line-->
+                    <!--var stateline = d3.svg.line()-->
+                        <!--.interpolate("cardinal")-->
+                        <!--.x(function(d) { return x(d.year); })-->
+                        <!--.y(function(d) { return y(d.value); });-->
 
-                    // Adds the svg canvas
-                    var svg = d3.select("#column1-1")
-                        .append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform",
-                            "translate(" + margin.left + "," + margin.top + ")");
-                    var data;
-                    // Get the data
-                    d3.json("data.json", function(error, json) {
-                        console.log(json)
+                    <!--// Adds the svg canvas-->
+                    <!--var svg = d3.select("#column1-1")-->
+                        <!--.append("svg")-->
+                        <!--.attr("width", width + margin.left + margin.right)-->
+                        <!--.attr("height", height + margin.top + margin.bottom)-->
+                        <!--.append("g")-->
+                        <!--.attr("transform",-->
+                            <!--"translate(" + margin.left + "," + margin.top + ")");-->
+                    <!--var data;-->
+                    <!--// Get the data-->
+                    <!--d3.json("data.json", function(error, json) {-->
+                        <!--console.log(json)-->
 
-                        json.forEach(function(d) {
-                            d.value = +d.value;
-                        });
+                        <!--json.forEach(function(d) {-->
+                            <!--d.value = +d.value;-->
+                        <!--});-->
 
-                        d3.select('#inds')
-                            .on("change", function () {
-                                var sect = document.getElementById("inds");
-                                var section = sect.options[sect.selectedIndex].value;
+                        <!--d3.select('#inds')-->
+                            <!--.on("change", function () {-->
+                                <!--var sect = document.getElementById("inds");-->
+                                <!--var section = sect.options[sect.selectedIndex].value;-->
 
-                                data = filterJSON(json, 'produce', section);
-
-
-                                //debugger
-
-                                data.forEach(function(d) {
-                                    d.value = +d.value;
-                                    //d.year = parseDate(String(d.year));
-                                    d.active = true;
-                                });
+                                <!--data = filterJSON(json, 'produce', section);-->
 
 
-                                //debugger
-                                updateGraph(data);
+                                <!--//debugger-->
+
+                                <!--data.forEach(function(d) {-->
+                                    <!--d.value = +d.value;-->
+                                    <!--//d.year = parseDate(String(d.year));-->
+                                    <!--d.active = true;-->
+                                <!--});-->
 
 
-                                jQuery('h1.page-header').html(section);
-                            });
-
-                        // generate initial graph
-                        data = filterJSON(json, 'produce', 'apples');
-                        updateGraph(data);
-
-                    });
-                    var len= 100;
-                    var color = d3.scale.ordinal().range(["#008000", "#ff0000"]);
-                    // var color = d3.scale.linear().domain([1,length])
-                    //     .interpolate(d3.interpolateHcl).range(["#48A36D",  "#0096ff", "#ff007e"]);
-
-                    function updateGraph(data) {
+                                <!--//debugger-->
+                                <!--updateGraph(data);-->
 
 
-                        // Scale the range of the data
-                        x.domain(d3.extent(data, function(d) { return d.year; }));
-                        y.domain([d3.min(data, function(d) { return d.value; }), d3.max(data, function(d) { return d.value; })]);
+                                <!--jQuery('h1.page-header').html(section);-->
+                            <!--});-->
+
+                        <!--// generate initial graph-->
+                        <!--data = filterJSON(json, 'produce', 'apples');-->
+                        <!--updateGraph(data);-->
+
+                    <!--});-->
+                    <!--var len= 100;-->
+                    <!--var color = d3.scale.ordinal().range(["#008000", "#ff0000"]);-->
+                    <!--// var color = d3.scale.linear().domain([1,length])-->
+                    <!--//     .interpolate(d3.interpolateHcl).range(["#48A36D",  "#0096ff", "#ff007e"]);-->
+
+                    <!--function updateGraph(data) {-->
 
 
-                        // Nest the entries by state
-                        dataNest = d3.nest()
-                            .key(function(d) {return d.state;})
-                            .entries(data);
+                        <!--// Scale the range of the data-->
+                        <!--x.domain(d3.extent(data, function(d) { return d.year; }));-->
+                        <!--y.domain([d3.min(data, function(d) { return d.value; }), d3.max(data, function(d) { return d.value; })]);-->
 
 
-                        var result = dataNest.filter(function(val,idx, arr){
-                            return $("." + val.key).attr("fill") != "#ccc"
-                            // matching the data with selector status
-                        });
+                        <!--// Nest the entries by state-->
+                        <!--dataNest = d3.nest()-->
+                            <!--.key(function(d) {return d.state;})-->
+                            <!--.entries(data);-->
 
 
-                        var state = svg.selectAll(".line")
-                            .data(result, function(d){return d.key});
-
-                        state.enter().append("path")
-                            .attr("class", "line");
-
-                        state.transition()
-                            .style("stroke", function(d,i) { return d.color = color.d; })
-                            .attr("id", function(d){ return 'tag'+d.key.replace(/\s+/g, '');}) // assign ID
-                            .attr("d", function(d){
-
-                                return stateline(d.values)
-                            });
-
-                        state.exit().remove();
-
-                        var legend = d3.select("#legend")
-                            .selectAll("text")
-                            .data(dataNest, function(d){return d.key});
-
-                        //checkboxes
-                        legend.enter().append("rect")
-                            .attr("width", 10)
-                            .attr("height", 10)
-                            .attr("x", 0)
-                            .attr("y", function (d, i) { return 0 +i*15; })  // spacing
-                            .attr("fill",function(d) {
-                                return color(d.key);
-
-                            })
-                            .attr("class", function(d,i){return "legendcheckbox " + d.key})
-                            .on("click", function(d){
-                                d.active = !d.active;
-
-                                d3.select(this).attr("fill", function(d){
-                                    if(d3.select(this).attr("fill")  == "#ccc"){
-                                        return color(d.key);
-                                    }else {
-                                        return "#ccc";
-                                    }
-                                })
+                        <!--var result = dataNest.filter(function(val,idx, arr){-->
+                            <!--return $("." + val.key).attr("fill") != "#ccc"-->
+                            <!--// matching the data with selector status-->
+                        <!--});-->
 
 
-                                var result = dataNest.filter(function(val,idx, arr){
-                                    return $("." + val.key).attr("fill") != "#ccc"
-                                    // matching the data with selector status
-                                })
+                        <!--var state = svg.selectAll(".line")-->
+                            <!--.data(result, function(d){return d.key});-->
 
-                                // Hide or show the lines based on the ID
-                                svg.selectAll(".line").data(result, function(d){return d.key})
-                                    .enter()
-                                    .append("path")
-                                    .attr("class", "line")
-                                    .style("stroke", function(d,i) { return d.color = color(d.key); })
-                                    .attr("d", function(d){
-                                        return stateline(d.values);
-                                    });
+                        <!--state.enter().append("path")-->
+                            <!--.attr("class", "line");-->
 
-                                svg.selectAll(".line").data(result, function(d){return d.key}).exit().remove()
+                        <!--state.transition()-->
+                            <!--.style("stroke", function(d,i) { return d.color = color.d; })-->
+                            <!--.attr("id", function(d){ return 'tag'+d.key.replace(/\s+/g, '');}) // assign ID-->
+                            <!--.attr("d", function(d){-->
 
-                            })
+                                <!--return stateline(d.values)-->
+                            <!--});-->
 
-                        //  Add the Legend text
-                        legend.enter().append("text")
-                            .attr("x", 15)
-                            .attr("y", function(d,i){return 10 +i*15;})
-                            .attr("class", "legend");
+                        <!--state.exit().remove();-->
 
-                        legend.transition()
-                            .style("fill", "#777" )
-                            .text(function(d){return d.key;});
+                        <!--var legend = d3.select("#legend")-->
+                            <!--.selectAll("text")-->
+                            <!--.data(dataNest, function(d){return d.key});-->
 
-                        legend.exit().remove();
+                        <!--//checkboxes-->
+                        <!--legend.enter().append("rect")-->
+                            <!--.attr("width", 10)-->
+                            <!--.attr("height", 10)-->
+                            <!--.attr("x", 0)-->
+                            <!--.attr("y", function (d, i) { return 0 +i*15; })  // spacing-->
+                            <!--.attr("fill",function(d) {-->
+                                <!--return color(d.key);-->
 
-                        svg.selectAll(".axis").remove();
+                            <!--})-->
+                            <!--.attr("class", function(d,i){return "legendcheckbox " + d.key})-->
+                            <!--.on("click", function(d){-->
+                                <!--d.active = !d.active;-->
 
-                        // Add the X Axis
-                        svg.append("g")
-                            .attr("class", "x axis")
-                            .attr("transform", "translate(0," + height + ")")
-                            .call(xAxis);
-
-                        // Add the Y Axis
-                        svg.append("g")
-                            .attr("class", "y axis")
-                            .call(yAxis);
-                    };
-
-                    function clearAll(){
-                        d3.selectAll(".line")
-                            .transition().duration(100)
-                            .attr("d", function(d){
-                                return null;
-                            });
-                        d3.select("#legend").selectAll("rect")
-                            .transition().duration(100)
-                            .attr("fill", "#ccc");
-                    };
-
-                    function showAll(){
-                        d3.selectAll(".line")
-                            .transition().duration(100)
-                            .attr("d", function(d){
-                                return stateline(d.values);
-                            });
-                        d3.select("#legend").selectAll("rect")
-                            .attr("fill",function(d) {
-                                if (d.active == true){
-                                    return color(d.key);
-                                }
-                            })
-                    };
+                                <!--d3.select(this).attr("fill", function(d){-->
+                                    <!--if(d3.select(this).attr("fill")  == "#ccc"){-->
+                                        <!--return color(d.key);-->
+                                    <!--}else {-->
+                                        <!--return "#ccc";-->
+                                    <!--}-->
+                                <!--})-->
 
 
-                </script>
-            </div>
+                                <!--var result = dataNest.filter(function(val,idx, arr){-->
+                                    <!--return $("." + val.key).attr("fill") != "#ccc"-->
+                                    <!--// matching the data with selector status-->
+                                <!--})-->
+
+                                <!--// Hide or show the lines based on the ID-->
+                                <!--svg.selectAll(".line").data(result, function(d){return d.key})-->
+                                    <!--.enter()-->
+                                    <!--.append("path")-->
+                                    <!--.attr("class", "line")-->
+                                    <!--.style("stroke", function(d,i) { return d.color = color(d.key); })-->
+                                    <!--.attr("d", function(d){-->
+                                        <!--return stateline(d.values);-->
+                                    <!--});-->
+
+                                <!--svg.selectAll(".line").data(result, function(d){return d.key}).exit().remove()-->
+
+                            <!--})-->
+
+                        <!--//  Add the Legend text-->
+                        <!--legend.enter().append("text")-->
+                            <!--.attr("x", 15)-->
+                            <!--.attr("y", function(d,i){return 10 +i*15;})-->
+                            <!--.attr("class", "legend");-->
+
+                        <!--legend.transition()-->
+                            <!--.style("fill", "#777" )-->
+                            <!--.text(function(d){return d.key;});-->
+
+                        <!--legend.exit().remove();-->
+
+                        <!--svg.selectAll(".axis").remove();-->
+
+                        <!--// Add the X Axis-->
+                        <!--svg.append("g")-->
+                            <!--.attr("class", "x axis")-->
+                            <!--.attr("transform", "translate(0," + height + ")")-->
+                            <!--.call(xAxis);-->
+
+                        <!--// Add the Y Axis-->
+                        <!--svg.append("g")-->
+                            <!--.attr("class", "y axis")-->
+                            <!--.call(yAxis);-->
+                    <!--};-->
+
+                    <!--function clearAll(){-->
+                        <!--d3.selectAll(".line")-->
+                            <!--.transition().duration(100)-->
+                            <!--.attr("d", function(d){-->
+                                <!--return null;-->
+                            <!--});-->
+                        <!--d3.select("#legend").selectAll("rect")-->
+                            <!--.transition().duration(100)-->
+                            <!--.attr("fill", "#ccc");-->
+                    <!--};-->
+
+                    <!--function showAll(){-->
+                        <!--d3.selectAll(".line")-->
+                            <!--.transition().duration(100)-->
+                            <!--.attr("d", function(d){-->
+                                <!--return stateline(d.values);-->
+                            <!--});-->
+                        <!--d3.select("#legend").selectAll("rect")-->
+                            <!--.attr("fill",function(d) {-->
+                                <!--if (d.active == true){-->
+                                    <!--return color(d.key);-->
+                                <!--}-->
+                            <!--})-->
+                    <!--};-->
+
+
+                <!--</script>-->
+            <!--</div>-->
 
             <div id="showAll">
                 <input name="showAllButton"

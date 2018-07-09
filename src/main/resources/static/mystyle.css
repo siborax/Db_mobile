@@ -1,0 +1,136 @@
+
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+.row.content {height: 1500px}
+
+/* Set gray background color and 100% height */
+.sidenav {
+    background-color: #f1f1f1;
+    height: 100%;
+}
+
+
+/* Set black background color, white text and some padding */
+footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {height: auto;}
+}
+path {
+    fill: none;
+    stroke: #333;
+    stroke-width: .5px;
+}
+p{
+    font-size: 10pt;
+    margin-left:20px;
+}
+.land-boundary {
+    stroke-width: 1px;
+}
+
+.county-boundary {
+    stroke: #ddd;
+}
+
+.site {
+    stroke-width: .5px;
+    stroke: #333;
+    fill: #9cf;
+}
+.filter_options{
+    position:absolute;
+    left: 150px;
+    top: 740px;
+    padding: 80px 50px 0px 0px;
+    margin:10px 60px 0px 0px;
+    width:120px;
+    border:dot-dash;
+    border:#005cbf;
+}
+
+.subunit {
+    /*position:relative;*/
+    top:0px;
+    fill: #ddc;
+    width: 500px;
+    height: 300px;
+}
+
+.place-label {
+    fill: #black;
+    fill-opacity: 1;
+    font-size: 10px;
+    font-weight: 300;
+    text-anchor: left;
+}
+.connecion {
+    fill: steelblue;
+}
+/*style per timeline*/
+path {
+    fill: none;
+    stroke: #333;
+    stroke-width: .5px;
+}
+
+.land-boundary {
+    stroke-width: 1px;
+}
+
+.county-boundary {
+    stroke: #ddd;
+}
+
+.site {
+    stroke-width: .5px;
+    stroke: #333;
+    fill: #9cf;
+}
+
+#svg{
+    position: relative;
+    width:960px;
+    height:500px;
+}
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.zoom {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}
+#column1{
+    position:relative;
+    width: 960px;
+    height: 500px;
+}
+/*#example{*/
+/*width:960px;*/
+/*height:500px;*/
+/*}*/
+
+#slider3 {
+    position:relative;
+    top:10px;
+    margin: 20px 0 10px 20px;
+    width: 500px;
+}
+#sliderContainer {
+    width:100%;
+    text-align: center;
+    position: relative;
+    top: 5px;
+    color:black;
+}

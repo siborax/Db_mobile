@@ -1,8 +1,12 @@
 package com.example.demo;
 
-public class Coordinates {
+import java.util.HashMap;
+
+public class Coordinates
+{
     private Double longitude;
     private Double latitude;
+
     public  Coordinates(Double longitude,Double latitude){
 
         this.longitude = longitude;
